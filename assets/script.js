@@ -1,16 +1,15 @@
 var viewScoresbnt = document.querySelector("#viewScoresbnt");
 var startButton = document.querySelector("#start");
 var timerEl = document.querySelector("#timer");
+var para = document.querySelector("#para");
+var saveButton = document.querySelector("#saveScores");
+var playagain = document.querySelector("#playAgainBnt");
 var timer;
 var timerTime;
-var questionTextBox = document.querySelector("Questionblank");
-var currentQuestion= {
-    cquestion: "",
-    canswer:""
-};
-var bluffAnswers =["jQuery","alse","Local Storage","function","keydown/keyup","if","else/else if",".querySelector","True","Array","Yes","for","script","Null","No","probably a cranberry","variable","Robot","Next Question"];
+var questionTextBox = document.querySelector(".Questionblank");
+var bluffAnswers =["jQuery","else","Local Storage","function","keydown/keyup","if","else/else if",".querySelector","True","Array","Yes","for","script","Null","No","probably a cranberry","variable","Robot","Next Question"];
 var questionAnswers = {
-
+ 
     option1: {
         question:"Every else statment you need a ____ statment before.",
         answer: "if"
@@ -29,7 +28,7 @@ var questionAnswers = {
     },
     option5: {
         question:"A variable in a function can be used by another Function.",
-        answer: "False"
+        answer:"False"
     },
     option6: {
         question:"The element to call your javascript file in html is a _____ Element",
@@ -61,12 +60,10 @@ function init(){
 
 function startGame(){
     timerCount = 50;
-    startButton.disabled = true;
-    startButton.hidden = true;
     questionsLeft = 5;
     choseOption();
     startTimer();
-    resetAray();
+    hideExtra();
 };
 /* This resests the questions list, part of my system to prevent repete questions*/
 function resetAray(){
@@ -132,48 +129,64 @@ function startTimer(){
             clearInterval(timer);
             lose();
         };
-    },50000);
+    },1000);
 };
 function choseOption(){
-   var choseQuestion = questionAnswers[Math.floor(Math.random()*questionAnswers.length)];
-    currentQuestion.cquestion = choseQuestion.question;
-    currentQuestion.canswer = choseQuestion.answer;
-    questionTextBox.textContent = currentQuestion.cquestion;
-    removedQuestions = questionAnswers.splice(choseQuestion);
-    var answeroptions= [currentQuestion.canswer,genbluff(),genbluff(),genbluff()];
+     var choseQuestion = Object.values(questionAnswers);
+     choseQuestion = choseQuestion[Math.floor(Math.random()* choseQuestion.length)];
+     var currentQuestion = choseQuestion.question;
+     var currentAnswer = choseQuestion.answer;
+    var questionText = document.createElement("h2");
+    document.getElementById("questions").appendChild(questionText);
+    questionText.textContent = `${currentQuestion}`;
+    delete questionAnswers.choseQuestion;
+    var answeroptions = ['"' + genbluff(1)+'"','"'+ genbluff(1)+'"', '"'+ currentAnswer +'"','"'+ genbluff(1)+'"'];
+    Array(answeroptions);
+    console.log(answeroptions);
     resetBluff();
      var aO1 = document.createElement("button");
      var aO2 = document.createElement("button");
      var aO3 = document.createElement("button");
      var aO4 = document.createElement("button");
     function stringAnswers(){
-        var answerScrambler;
-        var usedBluff;
-        answerScrambler = answeroptions[Math.floor(Math.random()*answeroptions.length)];
-        usedBluff = answeroptions.splice(answerScrambler);
+        var answerScrambler = answeroptions[Math.floor(Math.random()*answeroptions.length)];
+        delete answeroptions.answerScrambler;
+        console.log(answerScrambler);
         return(answerScrambler);
+    }; /*if statment here to seprate variables*/
+    var op1 = stringAnswers();
+    var op1 = stringAnswers();
+    var op1 = stringAnswers();
+    var op1 = stringAnswers();
+    aO1.textContent = op1;
+    aO2.textContent = op2
+    aO3.textContent = op3
+    aO4.textContent = op4;
+    document.getElementById("questions").appendChild(aO1);
+    document.getElementById("questions").appendChild(aO2);
+    document.getElementById("questions").appendChild(aO3);
+    document.getElementById("questions").appendChild(aO4);
+    resetAnswerString()
+    function genbluff(len){
+        var output = "";
+        for (let i = 0; i < len; i++) {
+            output += " " + bluffAnswers[Math.floor(Math.random()*bluffAnswers.length)] + "";
+        }
+        console.log(output);
+        if (output == currentAnswer){
+            output -= " " + currentAnswer + ""
+            output += " " + bluffAnswers[Math.floor(Math.random()*bluffAnswers.length)]  + "";
+        };
+        delete bluffAnswers.output;
+        return (output);
+        
     };
-    aO1.textContent = stringAnswers();
-    aO2.textContent = stringAnswers();
-    aO3.textContent = stringAnswers();
-    aO4.textContent = stringAnswers();
-    questionTextBox.appendChild(aO1);
-    questionTextBox.appendChild(aO2);
-    questionTextBox.appendChild(aO3);
-    questionTextBox.appendChild(aO4);
+    function resetAnswerString(){
+        answeroptions = [currentAnswer,genbluff(),genbluff(),genbluff()];
+    };
 };
-function genbluff(){
-    var output = "";
-    output = bluffAnswers[Math.floor(Math.random()*bluffAnswers.length)];
-    var usedbluff;
-    usedbluff = bluffAnswers.splice(output);
-    if (bluffAnswers === canswer){
-        output = bluffAnswers[Math.floor(Math.random()*bluffAnswers.length)];
-        usedbluff = bluffAnswers.splice(output);
-    };
-    return(output);
 
-};
+
 function resetBluff(){
      bluffAnswers =["jQuery","alse","Local Storage","function","keydown/keyup","if","else/else if",".querySelector","True","Array","Yes","for","script","Null","No","probably a cranberry","variable","Robot","Next Question"];
 }
@@ -186,7 +199,6 @@ function viewScores(){
 function getOldScores(){
 
 }
-var playagain = document.querySelector("#playAgainBnt");
 
 viewScoresbnt.addEventListener("click",viewScores());
 function lose(){
@@ -196,14 +208,24 @@ function lose(){
     playagain.appendChild (lostGame);
 
 };
+
+function hideExtra(){
+    para.setAttribute("style", "display: none");
+    startButton.disabled = true;
+    startButton.setAttribute("style", "display: none");
+    questionTextBox.setAttribute("style", "display: none");
+}
 startButton.addEventListener("click", startGame);
 init();
 
 
 function playAgain(){
-    document.getElementById("questions").reset();
+    resetAray();
+    para.setAttribute("style", "display: flex");
     startButton.disabled = false;
-    startButton.hidden = false;
+    startButton.setAttribute("style", "display: flex");
+    playagain.setAttribute("style", "display: none");
+    saveButton.setAttribute("style", "display: none");
 };
 
-playagain.addEventListener("click", playAgain());
+playagain.addEventListener("click", playAgain);
