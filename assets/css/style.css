@@ -36,7 +36,7 @@ header h1 {
     display: flex;
     align-items: end;
 }
-.questions{
+#questions{
     display:flex;
     margin: 8px 300px;
     flex-direction: column;
