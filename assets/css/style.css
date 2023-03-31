@@ -50,3 +50,14 @@ header h1 {
 #playAgainBnt{
     display: none; 
 }
+ul{
+    list-style-type: none;
+}
+li{
+    border: rgb(89, 1, 100);
+    background-color: rgb(89, 1, 100);
+    color:rgb(226, 124, 40);
+    display: block;
+    font-size: 35px;
+    flex-wrap: nowrap;
+}

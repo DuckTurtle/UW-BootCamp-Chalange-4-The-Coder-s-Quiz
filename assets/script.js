@@ -8,13 +8,18 @@ var playagain = document.querySelector("#playAgainBnt");
 var listScores = document.querySelector("#listScores");
 var firstPart = document.getElementById("questions");
 var lossTxt = document.querySelector("#LossTxt");
-var lists = document.querySelectorAll("li");
+var questionText = document.querySelector("#questionTextBox");
+
+var aO1 = document.querySelector("#aO1");
+var aO2 = document.querySelector("#aO2");
+var aO3 = document.querySelector("#aO3");
+var aO4 = document.querySelector("#aO4");
 var timer;
 var form = document.getElementById("ScoreForm");
 var timerTime;
 var scoreList = [];
 var questionTextBox = document.querySelector(".startPageText");
-var bluffAnswers = ["jQuery", "else", "Local Storage", "function", "keydown/keyup", "if", "else/else if", ".querySelector", "True", "Array", "Yes", "for", "script", "Null", "No", "probably a cranberry", "variable", "Robot", "Next Question"];
+var bluffAnswers = ["Greg", "else", "Local Storage", "function", "keydown/keyup", "if", "else/else if", ".querySelector", "True", "Array", "Yes", "for", "script", "Null", "No", "probably a cranberry", "variable", "Robot", "Next Question"];
 var questionAnswers = {
 
     option1: {
@@ -66,19 +71,21 @@ function init() {
     if (storedScores !== null) {
         scoreList = storedScores;
     }
-    timerCount = 50;
+    hideButtons();
     getOldScores();
-    hideSavestools();
-    lossTxt.setAttribute("style", "display: none");
+    hideNotNeeded();
 };
 
 function startGame() {
-    timerCount = 50;
+    timerCount = 90;
     questionsLeft = 5;
     choseOption();
     startTimer();
     hideExtra();
+    showButtons();
+    getOldScores()
 };
+/*var playerScoreLists = document.getElementById(".list");*/
 /* This resests the questions list, part of my system to prevent repete questions*/
 function resetAray() {
     questionAnswers = {
@@ -130,6 +137,8 @@ function resetBluff() {
 };
 
 function win() {
+    hideExtra();
+    hideButtons();
     saveScore();
 };
 function startTimer() {
@@ -142,15 +151,12 @@ function startTimer() {
                 win();
             };
         };
-        if (timerCount === 0) {
+        if (timerCount === 0 || timerCount <= 0) {
             clearInterval(timer);
             lose();
         };
     }, 1000);
 };
-var questionText = document.createElement("h2");
-questionText.setAttribute("id", "questionTextBox");
-document.getElementById("questions").appendChild(questionText);
 function choseOption() {
     var choseQuestion = Object.values(questionAnswers);
     var chosenQuestion = choseQuestion[Math.floor(Math.random() * choseQuestion.length)];
@@ -166,17 +172,13 @@ function choseOption() {
     console.log(chosenQuestion);
     var currentAnswer = chosenQuestion.answer;
     document.getElementById("questionTextBox").textContent = `${currentQuestion}`;
-    var answeroptions = ['' + genbluff(1) + '', '' + genbluff(1) + '', '' + currentAnswer + '', '' + genbluff(1)];
+    const indexts = bluffAnswers.indexOf(currentAnswer);
+        if (indexts > -1){
+        bluffAnswers.splice(indexts, 1);
+        }
+    var answeroptions = ['' + genbluff() + '', ' ' + genbluff() + ' ', '' + currentAnswer + '', ' ' + genbluff() + ''];
     Array(answeroptions);
     resetBluff();
-    var aO1 = document.createElement("button");
-    var aO2 = document.createElement("button");
-    var aO3 = document.createElement("button");
-    var aO4 = document.createElement("button");
-    aO1.setAttribute("id", "aO1");
-    aO2.setAttribute("id", "aO2");
-    aO3.setAttribute("id", "aO3");
-    aO4.setAttribute("id", "aO4");
     function stringAnswers() {
         var answerScrambler = answeroptions[Math.floor(Math.random() * answeroptions.length)];
         const index = answeroptions.indexOf(answerScrambler);
@@ -189,16 +191,10 @@ function choseOption() {
     aO2.textContent = stringAnswers();
     aO3.textContent = stringAnswers();
     aO4.textContent = stringAnswers();
-    function deleteOldButton() {
-        aO1.remove();
-        aO2.remove();
-        aO3.remove();
-        aO4.remove();
-    }
     function checkButton1() {
         var check1 = aO1.textContent;
         if (check1 === currentAnswer) {
-            deleteOldButton();
+            disableButtons()
             choseOption();
             questionsLeft--;
         }
@@ -209,7 +205,7 @@ function choseOption() {
     function checkButton2() {
         var check2 = aO2.textContent;
         if (check2 === currentAnswer) {
-            deleteOldButton();
+            disableButtons()
             choseOption();
             questionsLeft--;
         }
@@ -220,7 +216,7 @@ function choseOption() {
     function checkButton3() {
         var check3 = aO3.textContent;
         if (check3 === currentAnswer) {
-            deleteOldButton();
+            disableButtons()
             choseOption();
             questionsLeft--;
         }
@@ -231,38 +227,40 @@ function choseOption() {
     function checkButton4() {
         var check4 = aO4.textContent;
         if (check4 === currentAnswer) {
-            deleteOldButton();
+            disableButtons()
             choseOption();
             questionsLeft--;
         }
         else if (check4 !== currentAnswer) {
             timerCount -= 5;
+            console.log(timerCount);
         };
     }
-
-    document.getElementById("questions").appendChild(aO1);
-    document.getElementById("questions").appendChild(aO2);
-    document.getElementById("questions").appendChild(aO3);
-    document.getElementById("questions").appendChild(aO4);
-    aO1.addEventListener("click", checkButton1);
-    aO2.addEventListener("click", checkButton2);
-    aO3.addEventListener("click", checkButton3);
-    aO4.addEventListener("click", checkButton4);
-
-    function genbluff(len) {
-        var output = "";
-        var currentBlufflist = bluffAnswers;
-        Array(currentBlufflist)
-        for (let i = 0; i < len; i++) {
-            output += " " + currentBlufflist[Math.floor(Math.random() * currentBlufflist.length)] + "";
-        }
-        const indexbL = bluffAnswers.indexOf(output);
+    function disableButtons(){
+        aO1.disabled = true;
+        aO2.disabled = true;
+        aO3.disabled = true;
+        aO4.disabled = true;  
+    }
+    function inableButtons(){
+        aO1.disabled = false;
+        aO2.disabled = false;
+        aO3.disabled = false;
+        aO4.disabled = false; 
+    }
+    aO1.addEventListener("click", checkButton1,{once: true });
+    aO2.addEventListener("click", checkButton2,{once: true });
+    aO3.addEventListener("click", checkButton3,{once: true });
+    aO4.addEventListener("click", checkButton4,{once: true });
+    inableButtons();
+    function genbluff() {
+        var currentBlufflist = bluffAnswers[Math.floor(Math.random() * bluffAnswers.length)];
+        const indexbL = bluffAnswers.indexOf(currentBlufflist);
         if (indexbL > -1) {
-            currentBlufflist.splice(indexbL, 1);
-            console.log(currentBlufflist);
+            bluffAnswers.splice(indexbL, 1);
         }
-        bluffAnswers = currentBlufflist;
-        return (output);
+        console.log(bluffAnswers);
+        return currentBlufflist;
     };
     
 };
@@ -273,48 +271,42 @@ function getOldScores() {
         var scores = scoreList[i];
 
         var li = document.createElement("li");
+        li.setAttribute("class","list");
         li.textContent = scores;
         li.setAttribute("data-index", i);
 
         document.getElementById("listScores").appendChild(li);
     }
-console.log(lists);
 };
 
 function viewScores() {
-    saveButton.setAttribute("style","display:none");
-    secondpart.setAttribute("style","display:flex");
-    lists.setAttribute("style","display:flex");
-    playagain.setAttribute("style","display:flex");
+    firstPart.setAttribute("style","display: none");
+    saveButton.setAttribute("style","display: none");
+    listScores.setAttribute("style","display: flex");
+    secondpart.setAttribute("style","display: flex");
+    hideButtons();
+    playagain.setAttribute("style","display: flex");
     hideExtra();
-    hideSavestools();
+    hideNotNeeded();
     getOldScores();
 };
 function saveScore() {
-    secondpart.setAttribute("style","display:none");
-    lists.setAttribute("style","display:none");
-    firstPart.setAttribute("style","display:none");
-    secondpart.setAttribute("style","display:flex");
+    /*playerScoreLists.setAttribute("style","display: flex");*/
+    questionText.setAttribute("style", "display: none");
     form.setAttribute("style", "display: flex");
-    playagain.setAttribute("style", "display: flex");
-    saveButton.setAttribute("style","display:flex");
+    saveButton.setAttribute("style","display: flex");
     localStorage.setItem("playerScores", JSON.stringify(scoreList));
 
 };
-function hideSavestools(){
-    saveButton.setAttribute("style", "display: none");
-   form.setAttribute("style", "display: none");
-}
 saveButton.addEventListener("click", function (event) {
     event.preventDefault();
     var initalInputs = document.querySelector("#inputBox");
-    console.log(initalInputs);
     var initalsText = initalInputs.value.trim();
     if (initalsText === "") {
         return;
     } 
-    var score = timer;
-    scoreList.push(initalsText +" " + score);
+    var score = timerCount;
+    scoreList.push(initalsText +" " + score + '',' ');
     initalInputs.value = "";
     saveScore();
     viewScores();
@@ -323,10 +315,29 @@ saveButton.addEventListener("click", function (event) {
 viewScoresbnt.addEventListener("click", viewScores);
 function lose() {
     viewScores();
+    hideButtons();
+    hideExtra();
     lossTxt.setAttribute("style","display:flex");
-
 };
 
+function hideButtons(){
+    aO1.setAttribute("style","display:none");
+    aO2.setAttribute("style","display:none");
+    aO3.setAttribute("style","display:none");
+    aO4.setAttribute("style","display:none");
+};
+function showButtons(){
+    aO1.setAttribute("style","display:flex");
+    aO2.setAttribute("style","display:flex");
+    aO3.setAttribute("style","display:flex");
+    aO4.setAttribute("style","display:flex");
+};
+function hideNotNeeded(){
+    saveButton.setAttribute("style", "display: none");
+    form.setAttribute("style", "display: none");
+    lossTxt.setAttribute("style","display:none");
+    hideButtons();
+};
 function hideExtra() {
     para.setAttribute("style", "display: none");
     startButton.disabled = true;
@@ -334,8 +345,9 @@ function hideExtra() {
     questionTextBox.setAttribute("style", "display: none");
 }
 function hideScores(){
+    firstPart.setAttribute("style","display:flex")
     secondpart.setAttribute("style","display:none");
-    lists.setAttribute("style","display:none");
+    listScores.setAttribute("style","display:none");
 
 };
 startButton.addEventListener("click", startGame);
@@ -345,13 +357,16 @@ init();
 
 function playAgain() {
     resetAray();
-    para.setAttribute("style", "display: flex");
+    para.setAttribute("style", "display: none");
     startButton.disabled = false;
+   /* playerScoreLists.setAttribute("style","display: none");*/
     startButton.setAttribute("style", "display: flex");
     playagain.setAttribute("style", "display: none");
     saveButton.setAttribute("style", "display: none");
     lossTxt.setAttribute("style","display:none");
+    questionText.setAttribute("style", "display: flex");
+    startGame();
+    showButtons();
     hideScores();
 };
-
 playagain.addEventListener("click", playAgain);
