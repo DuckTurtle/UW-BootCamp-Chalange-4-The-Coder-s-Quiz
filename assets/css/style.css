@@ -44,6 +44,10 @@ header h1 {
     align-items: center;
     margin-top: 100px;
 }
+form{
+    align-items: center;
+    justify-content: center;
+}
 #saveScores{
     display: none; 
 }
@@ -52,12 +56,33 @@ header h1 {
 }
 ul{
     list-style-type: none;
+    display: none;
+    flex-direction: column;
 }
 li{
     border: rgb(89, 1, 100);
-    background-color: rgb(89, 1, 100);
     color:rgb(226, 124, 40);
     display: block;
     font-size: 35px;
     flex-wrap: nowrap;
+    padding-top:5px;
+}
+@media (max-width:800px){
+    li{
+        font-size: 15px;
+    }
+    #timer{
+        font-size: 25px;
+    }
+    body{
+        min-height: 50vh;
+    }
+    #questions{
+        margin: 8px 50px;
+    }
+    #buttons{
+        flex-wrap: wrap;
+        margin: 8px;
+    }
+
 }

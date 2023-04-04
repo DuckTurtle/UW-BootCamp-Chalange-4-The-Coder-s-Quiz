@@ -9,7 +9,7 @@ var listScores = document.querySelector("#listScores");
 var firstPart = document.getElementById("questions");
 var lossTxt = document.querySelector("#LossTxt");
 var questionText = document.querySelector("#questionTextBox");
-
+var playerScoreLists = document.getElementsByClassName("list");
 var aO1 = document.querySelector("#aO1");
 var aO2 = document.querySelector("#aO2");
 var aO3 = document.querySelector("#aO3");
@@ -85,7 +85,7 @@ function startGame() {
     showButtons();
     getOldScores()
 };
-/*var playerScoreLists = document.getElementById(".list");*/
+
 /* This resests the questions list, part of my system to prevent repete questions*/
 function resetAray() {
     questionAnswers = {
@@ -191,7 +191,8 @@ function choseOption() {
     aO2.textContent = stringAnswers();
     aO3.textContent = stringAnswers();
     aO4.textContent = stringAnswers();
-    function checkButton1() {
+    function checkButton1(event) {
+        event.stopPropagation();
         var check1 = aO1.textContent;
         if (check1 === currentAnswer) {
             disableButtons()
@@ -199,10 +200,12 @@ function choseOption() {
             questionsLeft--;
         }
         else if (check1 !== currentAnswer) {
+            console.log("checkButton1");
             timerCount -= 5;
         };
     }
-    function checkButton2() {
+    function checkButton2(event) {
+        event.stopPropagation();
         var check2 = aO2.textContent;
         if (check2 === currentAnswer) {
             disableButtons()
@@ -210,10 +213,12 @@ function choseOption() {
             questionsLeft--;
         }
         else if (check2 !== currentAnswer) {
+            console.log("checkButton2");
             timerCount -= 5;
         };
     }
-    function checkButton3() {
+    function checkButton3(event) {
+        event.stopPropagation();
         var check3 = aO3.textContent;
         if (check3 === currentAnswer) {
             disableButtons()
@@ -221,10 +226,12 @@ function choseOption() {
             questionsLeft--;
         }
         else if (check3 !== currentAnswer) {
+            console.log("checkButton3");
             timerCount -= 5;
         };
     }
-    function checkButton4() {
+    function checkButton4(event) {
+        event.stopPropagation();
         var check4 = aO4.textContent;
         if (check4 === currentAnswer) {
             disableButtons()
@@ -232,8 +239,8 @@ function choseOption() {
             questionsLeft--;
         }
         else if (check4 !== currentAnswer) {
+            console.log("checkButton4");
             timerCount -= 5;
-            console.log(timerCount);
         };
     }
     function disableButtons(){
@@ -248,10 +255,10 @@ function choseOption() {
         aO3.disabled = false;
         aO4.disabled = false; 
     }
-    aO1.addEventListener("click", checkButton1,{once: true });
-    aO2.addEventListener("click", checkButton2,{once: true });
-    aO3.addEventListener("click", checkButton3,{once: true });
-    aO4.addEventListener("click", checkButton4,{once: true });
+    aO1.addEventListener("click", checkButton1);
+    aO2.addEventListener("click", checkButton2);
+    aO3.addEventListener("click", checkButton3);
+    aO4.addEventListener("click", checkButton4);
     inableButtons();
     function genbluff() {
         var currentBlufflist = bluffAnswers[Math.floor(Math.random() * bluffAnswers.length)];
@@ -291,7 +298,7 @@ function viewScores() {
     getOldScores();
 };
 function saveScore() {
-    /*playerScoreLists.setAttribute("style","display: flex");*/
+    showList();
     questionText.setAttribute("style", "display: none");
     form.setAttribute("style", "display: flex");
     saveButton.setAttribute("style","display: flex");
@@ -319,6 +326,16 @@ function lose() {
     hideExtra();
     lossTxt.setAttribute("style","display:flex");
 };
+function hideList(){
+    for(i = 0; i > playerScoreLists.length; i++){
+        playerScoreLists[i].setAttribute("style", "display: none");
+    }
+}
+function showList(){
+    for(i = 0; i > playerScoreLists.length; i++){
+        playerScoreLists[i].setAttribute("style", "display: flex");
+    }
+}
 
 function hideButtons(){
     aO1.setAttribute("style","display:none");
@@ -359,7 +376,7 @@ function playAgain() {
     resetAray();
     para.setAttribute("style", "display: none");
     startButton.disabled = false;
-   /* playerScoreLists.setAttribute("style","display: none");*/
+    hideList();
     startButton.setAttribute("style", "display: flex");
     playagain.setAttribute("style", "display: none");
     saveButton.setAttribute("style", "display: none");
